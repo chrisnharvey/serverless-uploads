@@ -22,3 +22,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/files', CreateFileController::class);
 
 });
+
+Route::post('/files/{file}', UploadFileController::class);
