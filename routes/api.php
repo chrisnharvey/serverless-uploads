@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CreateFileController;
+use App\Http\Controllers\DownloadFileController;
+use App\Http\Controllers\UploadFileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,11 +19,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
-    return $request->user();
-});
+        return $request->user();
+    });
 
     Route::post('/files', CreateFileController::class);
 
+    Route::get('/files/{file}/download', DownloadFileController::class);
 });
 
 Route::post('/files/{file}', UploadFileController::class);
