@@ -14,5 +14,5 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -qq git unz
     composer install --optimize-autoloader --no-dev && \
     php artisan view:cache && \
     mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
-    a2enmod rewrite & \
+    a2enmod rewrite && \
     chown www-data:www-data -R /app/storage
