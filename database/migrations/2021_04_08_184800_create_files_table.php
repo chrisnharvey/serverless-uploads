@@ -15,6 +15,7 @@ class CreateFilesTable extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->uuid('id');
+            $table->uuid('verification_token')->nullable();
 
             $table->string('path')->nullable();
             $table->string('name')->nullable();

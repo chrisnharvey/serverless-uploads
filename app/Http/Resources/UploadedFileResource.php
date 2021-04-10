@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Crypt;
 
 class UploadedFileResource extends JsonResource
 {
@@ -16,6 +17,7 @@ class UploadedFileResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'token' => Crypt::encryptString($this->verification_token),
             'name' => $this->name,
             'size' => $this->size,
             'mimetype' => $this->mimetype,
