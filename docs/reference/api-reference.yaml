@@ -1,0 +1,330 @@
+openapi: 3.0.0
+info:
+  title: Serverless Uploads
+  version: '1.0'
+  license:
+    name: AGPLv3
+servers:
+  - {}
+paths:
+  /api/files:
+    post:
+      summary: ''
+      operationId: post-api-files
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  data:
+                    type: object
+                    required:
+                      - id
+                      - token
+                      - types
+                      - minSize
+                      - maxSize
+                      - linkExpires
+                      - fileExpiresIn
+                    properties:
+                      id:
+                        type: string
+                        minLength: 1
+                      token:
+                        type: string
+                        minLength: 1
+                      types:
+                        type: array
+                        items:
+                          type: string
+                      minSize:
+                        type:
+                          - number
+                          - 'null'
+                      maxSize:
+                        type:
+                          - number
+                          - 'null'
+                      linkExpires:
+                        type: string
+                        minLength: 1
+                      fileExpiresIn:
+                        type: number
+                required:
+                  - data
+              examples:
+                image:
+                  value:
+                    data:
+                      id: 29749786-9155-4fd8-9639-d667b30f1fdc
+                      token: eyJpdiI6Im1UUjhYNHY5bkxKSDVuZk51NXFUVnc9PSIsInZhbHVlIjoiWS8rdUlubDIrZUdvMkpVNkRFVlZpT2s1OWhCMWpKWm5HN0F6T3JRTWg5eFJsSXpYY0lvVzFnTkk1QklMS2xVRyIsIm1hYyI6ImYxNmYxMDlkMTAwMmY3NDcxODgwOTEzMDlhZThkNmZkNDBlZWU5ZWNkYjgxNjkwNmNmZWRmOTliYWFjYTlmYmYifQ==
+                      types:
+                        - jpg
+                        - png
+                      minSize: null
+                      maxSize: 10000
+                      linkExpires: '2021-04-09T22:15:32.000000Z'
+                      fileExpiresIn: 86400
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                  errors:
+                    type: object
+                required:
+                  - message
+                  - errors
+              examples:
+                invalid:
+                  value:
+                    message: The given data was invalid.
+                    errors:
+                      linkExpires:
+                        - The link expires field is required.
+                      fileExpires:
+                        - The file expires field is required.
+      description: Create a file in preperation for an upload
+      security:
+        - Bearer Token: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                types:
+                  type:
+                    - array
+                    - 'null'
+                  items:
+                    type: string
+                minSize:
+                  type:
+                    - number
+                    - 'null'
+                maxSize:
+                  type:
+                    - number
+                    - 'null'
+                linkExpires:
+                  type: number
+                fileExpires:
+                  type: number
+              required:
+                - linkExpires
+                - fileExpires
+            examples:
+              image:
+                value:
+                  types:
+                    - jpg
+                    - png
+                  minSize: null
+                  maxSize: 1000
+                  linkExpires: 3600
+                  fileExpires: 86400
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+        description: ''
+  '/api/files/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: ''
+      operationId: post-api-files-id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        minLength: 1
+                      token:
+                        type: string
+                        minLength: 1
+                      name:
+                        type: string
+                        minLength: 1
+                      size:
+                        type: number
+                      mimetype:
+                        type: string
+                        minLength: 1
+                    required:
+                      - id
+                      - token
+                      - name
+                      - size
+                      - mimetype
+                required:
+                  - data
+              examples:
+                image:
+                  value:
+                    data:
+                      id: 29749786-9155-4fd8-9639-d667b30f1fdc
+                      token: eyJpdiI6InlCVERUTEFsU2NjWnRxTlN6UlpwQ0E9PSIsInZhbHVlIjoiNm10cXRWWGYyZzNkeDVaZ3RTTFMrTkU1a2EzS0k1WE5XMGhzN3lpOHRCd1hHYmNCeTZKTm4xaUU5aDF4NkpHRSIsIm1hYyI6IjkxNzI0NTA4MGNmZWRmYzc5ZmQ0YmU0NjMwZGFiOWRlM2VmY2U0MzFlOWZlN2Q2MTllNzJiZWFjYzAyNThhMGMifQ==
+                      name: avatar.jpg
+                      size: 30244
+                      mimetype: image/jpeg
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                required:
+                  - message
+              examples:
+                unauthorized:
+                  value:
+                    message: This action is unauthorized.
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                required:
+                  - message
+              examples:
+                already-uploaded:
+                  value:
+                    message: File already uploaded
+        '410':
+          description: Gone
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                required:
+                  - message
+              examples:
+                link-expired:
+                  value:
+                    message: Link has expired
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                  errors:
+                    type: object
+                required:
+                  - message
+                  - errors
+              examples:
+                invalid:
+                  value:
+                    message: The given data was invalid.
+                    errors:
+                      file:
+                        - 'The file must be a file of type: jpg, png.'
+      description: Upload a file using the id and token from the "Create File" request
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                file:
+                  type: string
+                  format: binary
+              required:
+                - token
+        description: ''
+  '/api/files/{id}/download':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+        '410':
+          description: Gone
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                required:
+                  - message
+              examples:
+                file-expired:
+                  value:
+                    message: File has expired
+      operationId: get-api-files-id-download
+      description: ''
+      security:
+        - Bearer Token: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: token
+          required: true
+components:
+  schemas: {}
+  securitySchemes:
+    Bearer Token:
+      type: http
+      scheme: bearer
